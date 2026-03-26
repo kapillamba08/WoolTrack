@@ -1,0 +1,2 @@
+# FarmerShipmentTrackerSystem
+Django Project
