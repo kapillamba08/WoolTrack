@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Processing Stages{% endblock %}
+{% block content %}
+<section class="panel">
+  <div class="panel-header">
+    <h2>Processing Stages</h2>
+    {% if user.is_staff %}
+    <a role="button" class="contrast" href="/processing/new/">Add Stage</a>
+    {% endif %}
+  </div>
+  {% if stages %}
+  <table class="data-table">
+    <thead>
+      <tr><th>Batch</th><th>Stage</th><th>Facility</th><th>Status</th><th>Start</th><th>End</th></tr>
+    </thead>
+    <tbody>
+      {% for s in stages %}
+      <tr>
+        <td>{{ s.batch.batch_id }}</td>
+        <td>{{ s.get_stage_type_display }}</td>
+        <td>{{ s.facility|default:"—" }}</td>
+        <td>{{ s.get_status_display }}</td>
+        <td>{{ s.started_at|date:"M d, Y" }}</td>
+        <td>{{ s.ended_at|date:"M d, Y" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <div class="empty-state">
+      <p>No processing stages yet. Log the first step to build traceability.</p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}
+

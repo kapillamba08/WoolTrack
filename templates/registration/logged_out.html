@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Signed Out{% endblock %}
+{% block content %}
+<section class="form-card">
+  <h2>See you soon!</h2>
+  <p>You have successfully signed out of WoolTrack.</p>
+  <a href="{% url 'login' %}" role="button" class="contrast">Back to login</a>
+</section>
+{% endblock %}
+

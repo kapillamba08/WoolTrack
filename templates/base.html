@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoolTrack · {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+    <nav class="app-nav">
+        <div class="nav-brand">
+            <a href="/" class="brand-pill">🐑 WoolTrack</a>
+        </div>
+        <button class="nav-toggle" data-target="nav-links" aria-label="Toggle navigation">☰</button>
+        <div id="nav-links" class="nav-links">
+            <a href="/farms/">Farms</a>
+            <a href="/batches/">Batches</a>
+            <a href="/processing/">Processing</a>
+            <a href="/logistics/">Logistics</a>
+            <a href="/admin/" target="_blank" rel="noopener">Admin</a>
+        </div>
+        <div class="nav-auth">
+            {% if user.is_authenticated %}
+                <span class="welcome">Hi, {{ user.first_name|default:user.username }}!</span>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="secondary outline">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="secondary outline">Log in</a>
+                <a href="{% url 'accounts:register' %}" class="contrast">Sign up</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    {% if messages %}
+    <section class="toast-stack">
+        {% for message in messages %}
+            <div class="toast {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    <main class="page-shell">
+        {% block content %}{% endblock %}
+    </main>
+    {% block scripts %}{% endblock %}
+    <script>
+        document.querySelectorAll('.nav-toggle').forEach((toggle) => {
+            toggle.addEventListener('click', () => {
+                const target = document.getElementById(toggle.dataset.target);
+                if (target) {
+                    target.classList.toggle('open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Add Processing Stage{% endblock %}
+{% block content %}
+<section class="form-card">
+  <h2>Add Processing Stage</h2>
+  <p>Track transitions like scouring, carding, spinning, dyeing, and more.</p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="contrast">Save</button>
+  </form>
+</section>
+{% endblock %}
+

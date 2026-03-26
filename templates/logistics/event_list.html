@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Distribution Events{% endblock %}
+{% block content %}
+<section class="panel">
+  <div class="panel-header">
+    <h2>Distribution Events</h2>
+    {% if user.is_staff %}
+    <a role="button" class="contrast" href="/logistics/new/">Add Event</a>
+    {% endif %}
+  </div>
+  {% if events %}
+  <table class="data-table">
+    <thead>
+      <tr><th>Batch</th><th>Type</th><th>Location</th><th>Time</th><th>Qty (kg)</th></tr>
+    </thead>
+    <tbody>
+      {% for e in events %}
+      <tr>
+        <td>{{ e.batch.batch_id }}</td>
+        <td>{{ e.get_event_type_display }}</td>
+        <td>{{ e.location|default:"—" }}</td>
+        <td>{{ e.timestamp|date:"M d, Y H:i" }}</td>
+        <td>{{ e.quantity_kg }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <div class="empty-state">
+      <p>No distribution events yet. Log a shipment to visualize movement.</p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}
+

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Register Farm{% endblock %}
+{% block content %}
+<section class="form-card">
+  <h2>Register Farm</h2>
+  <p>Capture farm credentials, ownership details, and certification status.</p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="contrast">Save</button>
+  </form>
+</section>
+{% endblock %}
+

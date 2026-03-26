@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">Live supply chain telemetry</p>
+    <h1>Monitor every bale from pasture to retail floor.</h1>
+    <p>Keep tabs on farm intake, batch processing, logistics events, and distribution at a glance.</p>
+    {% if user.is_staff %}
+    <div class="hero-actions">
+      <a href="/batches/new/" role="button" class="contrast">Create batch</a>
+      <a href="/logistics/new/" role="button" class="secondary outline">Schedule logistics</a>
+    </div>
+    {% endif %}
+  </div>
+  <div class="panel">
+    <h3>Today's highlights</h3>
+    <ul>
+      <li><strong>{{ in_process }}</strong> batches currently mid-process</li>
+      <li><strong>{{ delivered }}</strong> batches delivered</li>
+      <li><strong>{{ total_farms }}</strong> farms reporting</li>
+    </ul>
+  </div>
+</section>
+
+<div class="card-grid">
+  <article class="pulse-card">
+    <h3>Total Farms</h3>
+    <div class="stat">{{ total_farms }}</div>
+    <p>Verified producers contributing wool.</p>
+  </article>
+  <article class="pulse-card">
+    <h3>Total Batches</h3>
+    <div class="stat">{{ total_batches }}</div>
+    <p>Tracked from shearing through delivery.</p>
+  </article>
+  <article class="pulse-card">
+    <h3>In Process</h3>
+    <div class="stat">{{ in_process }}</div>
+    <p>Currently in any processing stage.</p>
+  </article>
+  <article class="pulse-card">
+    <h3>Delivered</h3>
+    <div class="stat">{{ delivered }}</div>
+    <p>Completed journeys ready for retail.</p>
+  </article>
+</div>
+
+<section class="panel">
+  <h3>Processing Stages</h3>
+  <canvas id="stageChart" height="160"></canvas>
+</section>
+
+<section class="panel">
+  <h3>Distribution Events</h3>
+  <canvas id="eventChart" height="160"></canvas>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const stageData = {{ stage_counts|safe }};
+  const eventData = {{ event_counts|safe }};
+
+  const toChart = (arr, key) => {
+    if (!arr || arr.length === 0) {
+      return { labels: ['No data'], counts: [0] };
+    }
+    const labels = arr.map(o => o[key] || 'Unknown');
+    const counts = arr.map(o => o.count || 0);
+    return { labels, counts };
+  }
+
+  const chartConfig = (label, chartData) => ({
+    type: 'bar',
+    data: {
+      labels: chartData.labels,
+      datasets: [{
+        label,
+        data: chartData.counts,
+        borderRadius: 8,
+        backgroundColor: 'rgba(60, 140, 231, 0.6)',
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 1 }
+        }
+      }
+    }
+  });
+
+  new Chart(
+    document.getElementById('stageChart'),
+    chartConfig('Processing stages', toChart(stageData, 'stage_type'))
+  );
+  new Chart(
+    document.getElementById('eventChart'),
+    chartConfig('Distribution events', toChart(eventData, 'event_type'))
+  );
+</script>
+{% endblock %}

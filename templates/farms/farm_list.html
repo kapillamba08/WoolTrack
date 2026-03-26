@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Farms{% endblock %}
+{% block content %}
+<section class="panel">
+  <div class="panel-header">
+    <h2>Farms</h2>
+    {% if user.is_staff %}
+    <a role="button" class="contrast" href="/farms/new/">Register Farm</a>
+    {% endif %}
+  </div>
+  {% if farms %}
+  <table class="data-table">
+    <thead>
+      <tr><th>Name</th><th>Owner</th><th>Location</th><th>Certification</th></tr>
+    </thead>
+    <tbody>
+      {% for farm in farms %}
+      <tr>
+        <td>{{ farm.name }}</td>
+        <td>{{ farm.owner_name }}</td>
+        <td>{{ farm.location }}</td>
+        <td>{{ farm.certification|default:"—" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <div class="empty-state">
+      <p>No farms yet. Start by registering your first wool producer.</p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}
+

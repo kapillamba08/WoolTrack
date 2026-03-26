@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Log In{% endblock %}
+{% block content %}
+<section class="form-card">
+  <h2>Welcome back 👋</h2>
+  <p>Sign in to continue monitoring the wool supply chain.</p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+      <label>
+        {{ field.label }}
+        {{ field }}
+        {% if field.help_text %}
+          <small>{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <small class="error">{{ error }}</small>
+        {% endfor %}
+      </label>
+    {% endfor %}
+    <button type="submit" class="contrast">Log in</button>
+  </form>
+  <p class="form-footer">
+    New to WoolTrack? <a href="{% url 'accounts:register' %}">Create an account</a>
+  </p>
+</section>
+{% endblock %}
+

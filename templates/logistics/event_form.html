@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Add Distribution Event{% endblock %}
+{% block content %}
+<section class="form-card">
+  <h2>Add Distribution Event</h2>
+  <p>Track movements between depots, warehouses, and retail partners.</p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="contrast">Save</button>
+  </form>
+</section>
+{% endblock %}
+
